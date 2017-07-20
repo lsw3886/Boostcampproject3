@@ -1,15 +1,20 @@
 package lsw.newboost3.Fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +33,7 @@ import lsw.newboost3.R;
 public class mapFragment extends Fragment implements OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final int LOCATION_REQUEST_CODE = 101;
     private GoogleMap mMap;
     private MapView mapView = null;
     String address;
@@ -54,6 +60,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION_REQUEST_CODE);
         super.onCreate(savedInstanceState);
 
 
@@ -63,6 +70,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         TextView addressView = (TextView) view.findViewById(R.id.address);
         addressView.setText(address);
@@ -138,7 +146,11 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if(mMap != null){
+            mMap.setMyLocationEnabled(true);
+        }
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         LatLng findres = MakeLatLng(this.item);
 
@@ -156,7 +168,26 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(findres));
 
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+    }
+
+    protected  void requestPermission(String permissionType, int requestCode){
+        int permission = ContextCompat.checkSelfPermission(getActivity(), permissionType);
+        if(permission != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(), new String[]{permissionType}, requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String Permissions[], int[] grantResults){
+        switch(requestCode){
+            case LOCATION_REQUEST_CODE:{
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(getActivity(), "Unable to show location - permission required", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
     }
 
     public LatLng MakeLatLng(Item item){
