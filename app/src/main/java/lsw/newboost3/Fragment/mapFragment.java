@@ -22,6 +22,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,6 +38,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private MapView mapView = null;
     String address;
+    TextView addressView;
     Item item;
 
 
@@ -72,7 +74,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        TextView addressView = (TextView) view.findViewById(R.id.address);
+        addressView = (TextView) view.findViewById(R.id.address);
         addressView.setText(address);
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.getMapAsync(this);
@@ -152,6 +154,8 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+
+
         LatLng findres = MakeLatLng(this.item);
 
         MarkerOptions markerOptions = new MarkerOptions();
@@ -215,6 +219,7 @@ public class mapFragment extends Fragment implements OnMapReadyCallback {
         }
 
     }
+
 
 
 

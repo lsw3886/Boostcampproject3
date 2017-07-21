@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements InputDataFragment
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+
         final InputDataFragment InputFragment = new InputDataFragment();
 
         fragmentManager = getSupportFragmentManager();

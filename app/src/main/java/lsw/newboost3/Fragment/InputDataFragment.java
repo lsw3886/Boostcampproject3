@@ -86,8 +86,8 @@ public class InputDataFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Item item = saveData();
-                if(item.getResAddress().equals("")){
-                    Toast.makeText(getActivity(), "주소를 입력하세요", Toast.LENGTH_SHORT).show();
+                if(item.getResAddress().equals("") || item.getResName().equals("")){
+                    Toast.makeText(getActivity(), "주소와 이름을 입력하세요", Toast.LENGTH_SHORT).show();
                 }else{
                     mDatabaseListener.putData(item);
                     mListener.onOpenMap(item);
